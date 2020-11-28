@@ -13,6 +13,9 @@ public class MapManager : MonoBehaviour
     private const int SEGMENT_AMOUNT = 15;
     private const float SEGMENT_LENGTH = 10;
 
+    public int PedSpawnAmount { get; set; } = 3;
+    public float PedSpawnPerDist { get; set; } = 15;
+
     private List<SegmentController> segments;
     private List<PedestrianController> peds;
     private IGameContext ctx => GameContext.instance;
@@ -36,10 +39,10 @@ public class MapManager : MonoBehaviour
     private void FixedUpdate()
     {
         distancePedCounter += ctx.PlayerController.ZDistanceTravelledLastTick;
-        if (distancePedCounter > 15)
+        if (distancePedCounter > PedSpawnPerDist)
         {
-            SpawnPedestrianBatch();
-            distancePedCounter = 0;
+            SpawnPedestrianBatch(PedSpawnAmount);
+            distancePedCounter -= PedSpawnPerDist;
         }
 
         if (ctx.PlayerController.transform.position.z > lastSegmentZ - SEGMENT_LENGTH * (SEGMENT_AMOUNT - 2))
@@ -68,8 +71,7 @@ public class MapManager : MonoBehaviour
 
     private void AppendSegment(SegmentController segment)
     {
-        LoadSegmentParameters(new SegmentParameters(new GameObject[]{}, 1));//(Random.value-0.5f)*60f));
-
+        // LoadSegmentParameters(loadedSegmentParameters);
         segment.LoadParameters(loadedSegmentParameters);
 
         if (segments.Count > 0) segment.AlignToSegment(segments.Last());

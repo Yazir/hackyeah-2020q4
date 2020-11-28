@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1675297c50467042a264149b2c5fe15, type: 3}
+  m_Name: SegCityA
+  m_EditorClassIdentifier: 
+  wallSegments:
+  - {fileID: 1666266343230501536, guid: 0edaac6792da11944a3d855fa9736b08, type: 3}
+  - {fileID: 549763623770642982, guid: 26ad334c32b524243b0fcb14ce810bf2, type: 3}
+  - {fileID: 2887353530508749425, guid: ab5b7a782659e1c4c8ffd7dc4b5cf9ee, type: 3}
+  - {fileID: 3745904537276131708, guid: 2639633a24b07b64e9b54f9295835c6d, type: 3}
+  - {fileID: 1245639905756699480, guid: fba7fd96e609689438c496077fe41196, type: 3}
+  - {fileID: 6443570613620443420, guid: bf7e3354a0b224341ac20063516ead6d, type: 3}
+  angle: -1
+  angleRandomness: 5

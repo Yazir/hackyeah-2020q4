@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f1675297c50467042a264149b2c5fe15, type: 3}
-  m_Name: CityA
+  m_Name: SegCityD
   m_EditorClassIdentifier: 
   wallSegments:
   - {fileID: 1666266343230501536, guid: 0edaac6792da11944a3d855fa9736b08, type: 3}
@@ -19,4 +19,5 @@ MonoBehaviour:
   - {fileID: 3745904537276131708, guid: 2639633a24b07b64e9b54f9295835c6d, type: 3}
   - {fileID: 1245639905756699480, guid: fba7fd96e609689438c496077fe41196, type: 3}
   - {fileID: 6443570613620443420, guid: bf7e3354a0b224341ac20063516ead6d, type: 3}
-  angle: 1
+  angle: -2.5
+  angleRandomness: 0
