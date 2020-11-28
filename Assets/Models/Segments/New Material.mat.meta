@@ -1,5 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 5b1ebc909364ce34998e75b8b5558b7d
+=======
+<<<<<<< Updated upstream:Assets/Materials/TestMat.mat.meta
+guid: f84c38924d328744d8d78bc981c286b3
+=======
+guid: 955db5799be31d446a45ced7917dba84
+>>>>>>> Stashed changes:Assets/Models/Segments/New Material.mat.meta
+>>>>>>> ea80ca0106b42a29254876e0a9a31ccdf537c3c1
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 0
