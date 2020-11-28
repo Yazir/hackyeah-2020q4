@@ -19,20 +19,42 @@ public class SegmentController : MonoBehaviour
     public Transform RightWallSocket => rightWallSocket;
     public ISegmentParameters LoadedParameters => loadedParameters;
 
+    static private float globalAppliedAngleDeviation = 0;
+
     private ISegmentParameters loadedParameters;
     private float angle = 1;
 
     public void AlignToSegment(SegmentController otherSegment) {
+        var deviationDecay = globalAppliedAngleDeviation*0.65f;
+        globalAppliedAngleDeviation -= deviationDecay;
+        var outAngle = angle - deviationDecay;
+
+        if (loadedParameters != null)
+        {
+            var angleDeviation = (Random.value-0.5f) * LoadedParameters.AngleDeviation;
+            outAngle += angleDeviation;
+            globalAppliedAngleDeviation = angleDeviation;
+        }
+
         var corePivotOffset = corePivot.transform.position - transform.position;
         transform.position = otherSegment.CoreSocket.transform.position - corePivotOffset;
 
-        leftWall.localEulerAngles = new Vector3(0, angle, 0);
+        leftWall.localEulerAngles = new Vector3(0, outAngle, 0);
         var leftWallPivotOffset = leftWallPivot.transform.position - leftWall.transform.position;
         leftWall.transform.position = otherSegment.leftWallSocket.transform.position - leftWallPivotOffset;
 
-        rightWall.localEulerAngles = new Vector3(0, -angle, 0);
+        rightWall.localEulerAngles = new Vector3(0, -outAngle, 0);
         var rightWallPivotOffset = rightWallPivot.transform.position - rightWall.transform.position;
         rightWall.transform.position = otherSegment.rightWallSocket.transform.position - rightWallPivotOffset;
+
+        // Wall offset at longer ranges fix
+        var leftWallLocalPosition = leftWall.transform.localPosition;
+        leftWallLocalPosition.x = Mathf.Lerp(leftWallLocalPosition.x, 0, 0.25f);
+        leftWall.transform.localPosition = leftWallLocalPosition;
+
+        var rightWallLocalPosition = rightWall.transform.localPosition;
+        rightWallLocalPosition.x = Mathf.Lerp(rightWallLocalPosition.x, 0, 0.25f);
+        rightWall.transform.localPosition = rightWallLocalPosition;
     }
 
     public void LoadParameters(ISegmentParameters parameters)
@@ -41,6 +63,8 @@ public class SegmentController : MonoBehaviour
             return;
         
         angle = parameters.Angle;
+        
+        loadedParameters = parameters;
         // załadować wizualia ścian
         // parameters.WallSegments 
         

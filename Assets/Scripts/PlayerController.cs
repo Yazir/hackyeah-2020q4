@@ -104,7 +104,6 @@ public class PlayerController : MonoBehaviour
         var ped = pedCollider.attachedRigidbody.GetComponent<PedestrianController>();
         var ghost = SpawnGhost();
         ghost.transform.position = ped.transform.position;
-        print("Ped caught");
     }
 
     private GameObject SpawnGhost() {
