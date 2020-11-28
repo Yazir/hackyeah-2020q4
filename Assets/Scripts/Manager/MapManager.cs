@@ -34,7 +34,7 @@ public class MapManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        distancePedCounter += ctx.PlayerController.DistanceTravelledLastTick;
+        distancePedCounter += ctx.PlayerController.ZDistanceTravelledLastTick;
         if (distancePedCounter > 15) {
             SpawnPedestrianBatch();
             distancePedCounter = 0;
@@ -89,6 +89,7 @@ public class MapManager : MonoBehaviour
         while (true)
         {
             var storedPeds = peds.ToList();
+            var yieldIndex = 0;
             foreach (var ped in storedPeds)
             {
                 if (ped == null)
@@ -98,9 +99,12 @@ public class MapManager : MonoBehaviour
                 {
                     Destroy(ped.gameObject);
                 }
+                yieldIndex++;
                 
-                yield return new WaitForEndOfFrame();
-                yield return new WaitForEndOfFrame();
+                if (yieldIndex > 3) {
+                    yield return new WaitForSeconds(0.06f);
+                    yieldIndex = 0;
+                }
             }
             
             yield return new WaitForSeconds(0.5f);

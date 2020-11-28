@@ -9,23 +9,53 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GhostCatcherWrapper ghostCatcher;
     [SerializeField] private GameObject ghostPrefab;
 
-    public float DistanceTravelledLastTick => distanceTravelledLastTick;
+    public float ZDistanceTravelledLastTick => zDistanceTravelledLastTick;
 
     private Vector3 maxSpeeds;
     private Rigidbody rb;
     private Vector3 velocity;
-    private float distanceTravelledLastTick;
+    private float zDistanceTravelledLastTick;
+    private Vector3 lastPosition;
+    private List<Transform> collectedGhosts;
 
     private void Awake()
     {
+        GameContext.instance.CameraController.SetTarget(transform);
+
         rb = GetComponent<Rigidbody>();
+        collectedGhosts = new List<Transform>();
+        lastPosition = transform.position;
         ghostCatcher.onTriggerEnter += OnGhostCatcherTriggerEnter;
+
+
+
+        SpawnGhost();
+        SpawnGhost();
+        SpawnGhost();
+        // SpawnGhost();
+        // SpawnGhost();
+        // SpawnGhost();
+        // SpawnGhost();
+        // SpawnGhost();
+        // SpawnGhost();
+        // SpawnGhost();
+        // SpawnGhost();
+        // SpawnGhost();
+        // SpawnGhost();
+        // SpawnGhost();
+        // SpawnGhost();
+        // SpawnGhost();
+        // SpawnGhost();
     }
 
     private void FixedUpdate()
     {
         UpdateDifficulty();
+        UpdateMovement();
+        UpdateGhosts();
+    }
 
+    private void UpdateMovement() {
         var dt = Time.fixedDeltaTime;
 
         var tickVelocity = new Vector3();
@@ -49,7 +79,10 @@ public class PlayerController : MonoBehaviour
         }
 
         rb.velocity = velocity;
-        distanceTravelledLastTick = velocity.magnitude * dt;
+        
+        // zDistanceTravelledLastTick = velocity.magnitude * dt;
+        zDistanceTravelledLastTick = Mathf.Max(0, transform.position.z - lastPosition.z);
+        lastPosition = transform.position;
     }
 
     private Vector3 GetMovementInput() {
@@ -75,6 +108,28 @@ public class PlayerController : MonoBehaviour
     }
 
     private GameObject SpawnGhost() {
-        return Instantiate(ghostPrefab);
+        var ghost = Instantiate(ghostPrefab);
+        collectedGhosts.Add(ghost.transform);
+        return ghost;
+    }
+
+    private void UpdateGhosts() {
+        var spacing = 0.13f;
+        var maxIndex = collectedGhosts.Count;
+        for (int i = 0; i < maxIndex; i++)
+        {
+            var ghost = collectedGhosts[i];
+
+            var origin = transform.position + Vector3.back*0.25f + rb.velocity * Time.fixedDeltaTime;
+            var outPosition = origin + Vector3.right * i*spacing;
+            outPosition += Vector3.left * maxIndex / 2f * spacing;
+            outPosition += Vector3.down * 0.15f;
+            outPosition += new Vector3(Random.value - 0.5f, (Random.value - 0.5f) * 0.2f, Random.value - 0.5f) * 0.015f;
+          
+            var sideFactor = Mathf.Abs(i - (maxIndex-1)/2f) / ((maxIndex-1)/2f);
+            outPosition += Vector3.back * maxIndex*0.15f * sideFactor;
+
+            ghost.position = Vector3.Lerp(ghost.position, outPosition, 0.6f - sideFactor*0.35f);
+        }
     }
 }

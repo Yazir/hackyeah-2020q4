@@ -19,4 +19,13 @@ public class PedestrianController : MonoBehaviour
     {
         rb.velocity = moveDirection * speed;
     }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.collider.gameObject.layer == LayerMask.NameToLayer("SideWall")) {
+            var segment = other.transform.parent;
+            var dirToCenter = (segment.position - Vector3.forward * 10 - transform.position).normalized;
+            moveDirection += dirToCenter * 2f;
+        }
+    }
 }
