@@ -34,7 +34,7 @@ public class StreetGen : MonoBehaviour
 
     private void Cleanup() {
         foreach (Transform child in empty.transform) {
-            Destroy(child);
+            Destroy(child.gameObject);
         }
     }
 }

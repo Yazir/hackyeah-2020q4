@@ -68,7 +68,7 @@ public class MapManager : MonoBehaviour
 
     private void AppendSegment(SegmentController segment)
     {
-        LoadSegmentParameters(new SegmentParameters(new GameObject[]{}, (Random.value-0.5f)*60f));
+        LoadSegmentParameters(new SegmentParameters(new GameObject[]{}, 1));//(Random.value-0.5f)*60f));
 
         segment.LoadParameters(loadedSegmentParameters);
 
