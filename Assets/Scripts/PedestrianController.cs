@@ -7,6 +7,8 @@ public class PedestrianController : MonoBehaviour
     [SerializeField] private float speed = 2;
     [SerializeField] private Transform visualObject;
 
+    public Transform VisualObject => visualObject;
+
     private Rigidbody rb;
     private Vector3 moveDirection;
 

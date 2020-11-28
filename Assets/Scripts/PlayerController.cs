@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -8,6 +9,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Vector3 baseMaxSpeeds;
     [SerializeField] private GhostCatcherWrapper ghostCatcher;
     [SerializeField] private GameObject ghostPrefab;
+    [SerializeField] private Transform visualObject;
 
     public float ZDistanceTravelledLastTick => zDistanceTravelledLastTick;
 
@@ -16,36 +18,16 @@ public class PlayerController : MonoBehaviour
     private Vector3 velocity;
     private float zDistanceTravelledLastTick;
     private Vector3 lastPosition;
-    private List<Transform> collectedGhosts;
+    private List<GhostController> collectedGhosts;
 
     private void Awake()
     {
         GameContext.instance.CameraController.SetTarget(transform);
 
         rb = GetComponent<Rigidbody>();
-        collectedGhosts = new List<Transform>();
+        collectedGhosts = new List<GhostController>();
         lastPosition = transform.position;
         ghostCatcher.onTriggerEnter += OnGhostCatcherTriggerEnter;
-
-
-
-        SpawnGhost();
-        SpawnGhost();
-        SpawnGhost();
-        // SpawnGhost();
-        // SpawnGhost();
-        // SpawnGhost();
-        // SpawnGhost();
-        // SpawnGhost();
-        // SpawnGhost();
-        // SpawnGhost();
-        // SpawnGhost();
-        // SpawnGhost();
-        // SpawnGhost();
-        // SpawnGhost();
-        // SpawnGhost();
-        // SpawnGhost();
-        // SpawnGhost();
     }
 
     private void FixedUpdate()
@@ -53,6 +35,7 @@ public class PlayerController : MonoBehaviour
         UpdateDifficulty();
         UpdateMovement();
         UpdateGhosts();
+        UpdateVisualObject();
     }
 
     private void UpdateMovement() {
@@ -78,11 +61,16 @@ public class PlayerController : MonoBehaviour
             else velocity.x -= Mathf.Sign(velocity.x) * factor;
         }
 
-        rb.velocity = velocity;
+        rb.MovePosition(rb.position + velocity * dt);
+        rb.velocity = Vector3.zero;
         
         // zDistanceTravelledLastTick = velocity.magnitude * dt;
         zDistanceTravelledLastTick = Mathf.Max(0, transform.position.z - lastPosition.z);
         lastPosition = transform.position;
+    }
+
+    private void UpdateVisualObject() {
+        visualObject.forward = velocity.normalized;
     }
 
     private Vector3 GetMovementInput() {
@@ -96,39 +84,53 @@ public class PlayerController : MonoBehaviour
     }
 
     private void UpdateDifficulty() {
-        maxSpeeds = baseMaxSpeeds + new Vector3(0, 0, transform.position.z / 10);
+        maxSpeeds = baseMaxSpeeds + new Vector3(0, 0, transform.position.z / 100);
     }
 
     private void OnGhostCatcherTriggerEnter(Collider pedCollider)
     {
         var ped = pedCollider.attachedRigidbody.GetComponent<PedestrianController>();
-        var ghost = SpawnGhost();
+        var ghost = SpawnAndCollectGhost(ped.VisualObject);
         ghost.transform.position = ped.transform.position;
     }
 
-    private GameObject SpawnGhost() {
-        var ghost = Instantiate(ghostPrefab);
-        collectedGhosts.Add(ghost.transform);
+    private GhostController SpawnAndCollectGhost(Transform at) {
+        var ghost = Instantiate(ghostPrefab).GetComponent<GhostController>();
+        ghost.transform.position = at.position;
+        ghost.transform.rotation = at.rotation;
+        collectedGhosts.Add(ghost);
+        ghost.AnimateCollection(this);
         return ghost;
     }
 
     private void UpdateGhosts() {
-        var spacing = 0.13f;
-        var maxIndex = collectedGhosts.Count;
+        var spacing = 0.20f;
+
+        var animable = collectedGhosts.Where(g => g.FinishedAnimating).ToArray();
+        var maxIndex = animable.Length;
         for (int i = 0; i < maxIndex; i++)
         {
-            var ghost = collectedGhosts[i];
+            var ghost = animable[i];
+            if (!ghost.FinishedAnimating)
+                continue;
 
-            var origin = transform.position + Vector3.back*0.25f + rb.velocity * Time.fixedDeltaTime;
+            var origin = transform.position + Vector3.forward*0.55f + rb.velocity * Time.fixedDeltaTime;
             var outPosition = origin + Vector3.right * i*spacing;
             outPosition += Vector3.left * maxIndex / 2f * spacing;
             outPosition += Vector3.down * 0.15f;
             outPosition += new Vector3(Random.value - 0.5f, (Random.value - 0.5f) * 0.2f, Random.value - 0.5f) * 0.015f;
           
-            var sideFactor = Mathf.Abs(i - (maxIndex-1)/2f) / ((maxIndex-1)/2f);
+            var sideFactor = maxIndex > 1 ? Mathf.Abs(i - (maxIndex-1)/2f) / ((maxIndex-1)/2f) : 1;
             outPosition += Vector3.back * maxIndex*0.15f * sideFactor;
+            
+            
+            var ghostToPlayer = transform.position - ghost.transform.position;
+            ghostToPlayer.y = 0;
+            var outRotation = Quaternion.LookRotation(ghostToPlayer);
 
-            ghost.position = Vector3.Lerp(ghost.position, outPosition, 0.6f - sideFactor*0.35f);
+            var controlFactor = ghost.OutsideControlFactor;
+            ghost.transform.position = Vector3.Lerp(ghost.transform.position, outPosition, 0.6f - sideFactor*0.35f * controlFactor);
+            ghost.transform.rotation = Quaternion.Lerp(ghost.transform.rotation, outRotation, 0.05f * controlFactor);
         }
     }
 }

@@ -8,6 +8,7 @@ public class clothRandom : MonoBehaviour
     public GameObject[] down;
     public GameObject[] hair;
     public GameObject[] foot;
+
     private void Start()
     {
         int upr = Random.Range(0, up.Length);
