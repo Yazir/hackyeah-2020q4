@@ -12,12 +12,13 @@ public class MapManager : MonoBehaviour
 
     private const int SEGMENT_AMOUNT = 15;
     private const float SEGMENT_LENGTH = 10;
-    
+
     private List<SegmentController> segments;
     private List<PedestrianController> peds;
     private IGameContext ctx => GameContext.instance;
     private float lastSegmentZ = -SEGMENT_LENGTH;
     private float distancePedCounter;
+    private SegmentParameters loadedSegmentParameters;
 
     private void Awake()
     {
@@ -35,22 +36,31 @@ public class MapManager : MonoBehaviour
     private void FixedUpdate()
     {
         distancePedCounter += ctx.PlayerController.ZDistanceTravelledLastTick;
-        if (distancePedCounter > 15) {
+        if (distancePedCounter > 15)
+        {
             SpawnPedestrianBatch();
             distancePedCounter = 0;
         }
 
-        if (ctx.PlayerController.transform.position.z > lastSegmentZ - SEGMENT_LENGTH*(SEGMENT_AMOUNT-2)) {
+        if (ctx.PlayerController.transform.position.z > lastSegmentZ - SEGMENT_LENGTH * (SEGMENT_AMOUNT - 2))
+        {
             AppendFirstSegment();
         }
     }
 
-    private void AppendNewSegment() {
+    public void LoadSegmentParameters(SegmentParameters parameters)
+    {
+        loadedSegmentParameters = parameters;
+    }
+
+    private void AppendNewSegment()
+    {
         var segment = Instantiate(segmentPrefab, segmentParent).GetComponent<SegmentController>();
         AppendSegment(segment);
     }
 
-    private void AppendFirstSegment() {
+    private void AppendFirstSegment()
+    {
         var segment = segments[0];
         segments.RemoveAt(0);
         AppendSegment(segment);
@@ -58,6 +68,10 @@ public class MapManager : MonoBehaviour
 
     private void AppendSegment(SegmentController segment)
     {
+        LoadSegmentParameters(new SegmentParameters(new GameObject[]{}, (Random.value-0.5f)*60f));
+
+        segment.LoadParameters(loadedSegmentParameters);
+
         if (segments.Count > 0) segment.AlignToSegment(segments.Last());
         else segment.transform.position = Vector3.zero;
 
@@ -83,7 +97,7 @@ public class MapManager : MonoBehaviour
         return ped;
     }
 
-    
+
     private IEnumerator PedCullCO()
     {
         while (true)
@@ -94,19 +108,20 @@ public class MapManager : MonoBehaviour
             {
                 if (ped == null)
                     continue;
-                
+
                 if (ctx.PlayerController.transform.position.z > ped.transform.position.z + 10f)
                 {
                     Destroy(ped.gameObject);
                 }
                 yieldIndex++;
-                
-                if (yieldIndex > 3) {
+
+                if (yieldIndex > 3)
+                {
                     yield return new WaitForSeconds(0.06f);
                     yieldIndex = 0;
                 }
             }
-            
+
             yield return new WaitForSeconds(0.5f);
         }
     }

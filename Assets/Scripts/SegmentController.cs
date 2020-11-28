@@ -17,7 +17,9 @@ public class SegmentController : MonoBehaviour
     public Transform CoreSocket => coreSocket;
     public Transform LeftWallSocket => leftWallSocket;
     public Transform RightWallSocket => rightWallSocket;
-    
+    public ISegmentParameters LoadedParameters => loadedParameters;
+
+    private ISegmentParameters loadedParameters;
     private float angle = 1;
 
     public void AlignToSegment(SegmentController otherSegment) {
@@ -33,20 +35,18 @@ public class SegmentController : MonoBehaviour
         rightWall.transform.position = otherSegment.rightWallSocket.transform.position - rightWallPivotOffset;
     }
 
-    public Vector3[] GetSpawnpoints(int amount = 1) {
-        // var available = spawnpoints.ToList();
-        // var picked = new List<Vector3>();
-
-        // for (int i = 0; i < amount; i++)
-        // {
-        //     var index = Random.Range(0, available.Count - 1);
-        //     picked.Add(available[index].position);
-        //     available.RemoveAt(index);
-        // }
+    public void LoadParameters(ISegmentParameters parameters)
+    {
+        if (loadedParameters == parameters)
+            return;
         
-        // return picked.ToArray();
+        angle = parameters.Angle;
+        // załadować wizualia ścian
+        // parameters.WallSegments 
+        
+    }
 
-
+    public Vector3[] GetSpawnpoints(int amount = 1) {
         var margin = 3; // Too low = spawnpoints in walls
         var distance = Vector3.Distance(leftWallSocket.transform.position, rightWallSocket.transform.position) - margin;
         var direction = (rightWallSocket.transform.position - leftWallSocket.transform.position).normalized;

@@ -5,6 +5,7 @@ using UnityEngine;
 public class PedestrianController : MonoBehaviour
 {
     [SerializeField] private float speed = 2;
+    [SerializeField] private Transform visualObject;
 
     private Rigidbody rb;
     private Vector3 moveDirection;
@@ -18,6 +19,11 @@ public class PedestrianController : MonoBehaviour
     private void FixedUpdate()
     {
         rb.velocity = moveDirection * speed;
+
+        var lookDirection = rb.velocity;
+        lookDirection.y = 0;
+        lookDirection = lookDirection.normalized;
+        visualObject.forward = lookDirection;
     }
 
     private void OnCollisionEnter(Collision other)
