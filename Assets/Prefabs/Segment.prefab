@@ -350,7 +350,6 @@ MonoBehaviour:
   rightWall: {fileID: 8766294535978154733}
   rightWallPivot: {fileID: 84425516244767126}
   rightWallSocket: {fileID: 8800701375276401334}
-  floor: {fileID: 0}
 --- !u!1 &8766294535978154734
 GameObject:
   m_ObjectHideFlags: 0

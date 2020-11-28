@@ -6,26 +6,40 @@ using UnityEngine;
 public class MapManager : MonoBehaviour
 {
     [SerializeField] private GameObject segmentPrefab;
+    [SerializeField] private GameObject pedPrefab;
     [SerializeField] private Transform segmentParent;
+    [SerializeField] private Transform pedParent;
 
-    private const int SEGMENT_AMOUNT = 50;
+    private const int SEGMENT_AMOUNT = 15;
     private const float SEGMENT_LENGTH = 10;
     
     private List<SegmentController> segments;
-    private GameContext ctx => GameContext.instance;
-    private float lastSegmentZ = -10f;
+    private List<PedestrianController> peds;
+    private IGameContext ctx => GameContext.instance;
+    private float lastSegmentZ = -SEGMENT_LENGTH;
+    private float distancePedCounter;
 
     private void Awake()
     {
         segments = new List<SegmentController>();
+        peds = new List<PedestrianController>();
+
         for (int i = 0; i < SEGMENT_AMOUNT; i++)
         {
             AppendNewSegment();
         }
+
+        StartCoroutine(PedCullCO());
     }
 
     private void FixedUpdate()
     {
+        distancePedCounter += ctx.PlayerController.DistanceTravelledLastTick;
+        if (distancePedCounter > 15) {
+            SpawnPedestrianBatch();
+            distancePedCounter = 0;
+        }
+
         if (ctx.PlayerController.transform.position.z > lastSegmentZ - SEGMENT_LENGTH*(SEGMENT_AMOUNT-2)) {
             AppendFirstSegment();
         }
@@ -45,12 +59,51 @@ public class MapManager : MonoBehaviour
     private void AppendSegment(SegmentController segment)
     {
         if (segments.Count > 0) segment.AlignToSegment(segments.Last());
-        else {
-            segment.transform.position = Vector3.zero;
-        }
+        else segment.transform.position = Vector3.zero;
+
         segments.Add(segment);
         lastSegmentZ = segment.transform.position.z;
     }
 
+    private void SpawnPedestrianBatch(int amount = 3)
+    {
+        var lastSegment = segments.Last();
+        var spawnpoints = lastSegment.GetSpawnpoints(amount);
+        for (int i = 0; i < amount; i++)
+        {
+            var ped = SpawnPedestrian();
+            ped.transform.position = spawnpoints[i];
+        }
+    }
 
+    private PedestrianController SpawnPedestrian()
+    {
+        var ped = Instantiate(pedPrefab, pedParent).GetComponent<PedestrianController>();
+        peds.Add(ped);
+        return ped;
+    }
+
+    
+    private IEnumerator PedCullCO()
+    {
+        while (true)
+        {
+            var storedPeds = peds.ToList();
+            foreach (var ped in storedPeds)
+            {
+                if (ped == null)
+                    continue;
+                
+                if (ctx.PlayerController.transform.position.z > ped.transform.position.z + 10f)
+                {
+                    Destroy(ped.gameObject);
+                }
+                
+                yield return new WaitForEndOfFrame();
+                yield return new WaitForEndOfFrame();
+            }
+            
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
 }

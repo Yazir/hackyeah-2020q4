@@ -2,7 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameContext : MonoBehaviour
+interface IGameContext
+{
+    PlayerController PlayerController { get; }
+    MapManager MapManager { get; }
+}
+
+public class GameContext : MonoBehaviour, IGameContext
 {
     [SerializeField] private PlayerController playerController;
     [SerializeField] private MapManager mapManager;

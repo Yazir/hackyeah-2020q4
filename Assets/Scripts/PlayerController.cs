@@ -6,14 +6,20 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Vector3 acceleration;
     [SerializeField] private Vector3 baseMaxSpeeds;
+    [SerializeField] private GhostCatcherWrapper ghostCatcher;
+    [SerializeField] private GameObject ghostPrefab;
+
+    public float DistanceTravelledLastTick => distanceTravelledLastTick;
 
     private Vector3 maxSpeeds;
     private Rigidbody rb;
     private Vector3 velocity;
+    private float distanceTravelledLastTick;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        ghostCatcher.onTriggerEnter += OnGhostCatcherTriggerEnter;
     }
 
     private void FixedUpdate()
@@ -43,6 +49,7 @@ public class PlayerController : MonoBehaviour
         }
 
         rb.velocity = velocity;
+        distanceTravelledLastTick = velocity.magnitude * dt;
     }
 
     private Vector3 GetMovementInput() {
@@ -57,5 +64,17 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateDifficulty() {
         maxSpeeds = baseMaxSpeeds + new Vector3(0, 0, transform.position.z / 10);
+    }
+
+    private void OnGhostCatcherTriggerEnter(Collider pedCollider)
+    {
+        var ped = pedCollider.attachedRigidbody.GetComponent<PedestrianController>();
+        var ghost = SpawnGhost();
+        ghost.transform.position = ped.transform.position;
+        print("Ped caught");
+    }
+
+    private GameObject SpawnGhost() {
+        return Instantiate(ghostPrefab);
     }
 }
