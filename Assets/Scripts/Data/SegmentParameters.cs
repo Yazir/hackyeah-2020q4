@@ -4,25 +4,24 @@ using UnityEngine;
 
 public interface ISegmentParameters
 {
-    GameObject[] WallSegments { get; }
     float Angle { get; }
     float AngleDeviation { get; }
+    bool Forest { get; }
+    Material FloorMaterial { get; }
 }
 
 [CreateAssetMenu(menuName = "HY/Segment Parameters")]
 public class SegmentParameters : ScriptableObject, ISegmentParameters
 {
-    [SerializeField] private GameObject[] wallSegments;
     [SerializeField] private float angle;
     [SerializeField] private float angleRandomness;
+    [SerializeField] private bool forest;
+    [SerializeField] private Material floorMaterial;
+    [SerializeField] private ObstacleSet obstacleSet;
 
-    public GameObject[] WallSegments => wallSegments;
     public float Angle => angle;
     public float AngleDeviation => angleRandomness;
-
-    // public SegmentParameters(GameObject[] wallSegments, float angle)
-    // {
-    //     this.wallSegments = wallSegments;
-    //     this.angle = angle;
-    // }
+    public bool Forest => forest;
+    public Material FloorMaterial => floorMaterial;
+    public ObstacleSet ObstacleSet => obstacleSet;
 }

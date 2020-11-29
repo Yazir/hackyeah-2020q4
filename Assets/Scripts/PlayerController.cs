@@ -94,7 +94,7 @@ public class PlayerController : MonoBehaviour
 
         var camera = GameContext.instance.CameraController;
         camera.SetFocusTarget(ghost.transform, 0.8f);
-        camera.runtimeOffset = (camera.Offset.normalized + Vector3.back) * collectedGhosts.Count / 6f;
+        camera.runtimeOffset = (camera.Offset.normalized + Vector3.back * 1.5f) * collectedGhosts.Count / 6f;
         
         ghost.transform.position = ped.transform.position;
     }

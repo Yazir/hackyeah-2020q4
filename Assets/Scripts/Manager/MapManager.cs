@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public interface ICullable {
+    float PositionZ { get; }
+    void Cull();
+}
+
 public class MapManager : MonoBehaviour
 {
     [SerializeField] private GameObject segmentPrefab;
@@ -18,6 +23,7 @@ public class MapManager : MonoBehaviour
 
     private List<SegmentController> segments;
     private List<PedestrianController> peds;
+    private List<ICullable> cullables;
     private IGameContext ctx => GameContext.instance;
     private float lastSegmentZ = -SEGMENT_LENGTH;
     private float distancePedCounter;
@@ -25,6 +31,7 @@ public class MapManager : MonoBehaviour
 
     private void Awake()
     {
+        cullables = new List<ICullable>();
         segments = new List<SegmentController>();
         peds = new List<PedestrianController>();
 
@@ -33,7 +40,7 @@ public class MapManager : MonoBehaviour
             AppendNewSegment();
         }
 
-        StartCoroutine(PedCullCO());
+        StartCoroutine(CullableCO());
     }
 
     private void FixedUpdate()
@@ -71,7 +78,6 @@ public class MapManager : MonoBehaviour
 
     private void AppendSegment(SegmentController segment)
     {
-        // LoadSegmentParameters(loadedSegmentParameters);
         segment.LoadParameters(loadedSegmentParameters);
 
         if (segments.Count > 0) segment.AlignToSegment(segments.Last());
@@ -100,24 +106,24 @@ public class MapManager : MonoBehaviour
     }
 
 
-    private IEnumerator PedCullCO()
+    private IEnumerator CullableCO()
     {
         while (true)
         {
-            var storedPeds = peds.ToList();
+            var storedCullables = cullables.ToList();
             var yieldIndex = 0;
-            foreach (var ped in storedPeds)
+            foreach (var cullable in storedCullables)
             {
-                if (ped == null)
+                if (cullable == null)
                     continue;
 
-                if (ctx.PlayerController.transform.position.z > ped.transform.position.z + 10f)
+                if (ctx.PlayerController.transform.position.z > cullable.PositionZ + 10f)
                 {
-                    Destroy(ped.gameObject);
+                    cullable.Cull();
                 }
                 yieldIndex++;
 
-                if (yieldIndex > 3)
+                if (yieldIndex > 5)
                 {
                     yield return new WaitForSeconds(0.06f);
                     yieldIndex = 0;

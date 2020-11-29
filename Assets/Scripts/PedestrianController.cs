@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PedestrianController : MonoBehaviour
+public class PedestrianController : MonoBehaviour, ICullable
 {
     [SerializeField] private float speed = 2;
     [SerializeField] private Transform visualObject;
 
     public Transform VisualObject => visualObject;
+    public float PositionZ => transform.position.z;
+
 
     private Rigidbody rb;
     private Vector3 moveDirection;
@@ -28,6 +30,11 @@ public class PedestrianController : MonoBehaviour
         visualObject.forward = lookDirection;
     }
 
+    public void Cull()
+    {
+        Destroy(this);
+    }
+
     private void OnCollisionEnter(Collision other)
     {
         if (other.collider.gameObject.layer == LayerMask.NameToLayer("SideWall")) {
@@ -36,4 +43,5 @@ public class PedestrianController : MonoBehaviour
             moveDirection += dirToCenter * 2f;
         }
     }
+
 }

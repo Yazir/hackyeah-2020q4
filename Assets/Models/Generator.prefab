@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5065091263397549323}
   m_Layer: 0
-  m_Name: Empty
+  m_Name: City
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -59,6 +59,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5065091263397549323}
+  - {fileID: 351729879853809150}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -3, z: 0}
@@ -74,10 +75,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26530c6671d50bb47b06ef90bbd49d28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  empty: {fileID: 5065091263397549322}
+  forestParent: {fileID: 7389182924737179463}
+  cityParent: {fileID: 5065091263397549322}
   segmentsAmount: 100
   segmentPrefabs:
   - {fileID: 4254956973792961598, guid: e8c7bef3fd946f5468d9211ae630fe09, type: 3}
   forestSegmentPrefabs: []
   reverse: 0
   Forest: 0
+--- !u!1 &7389182924737179463
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 351729879853809150}
+  m_Layer: 0
+  m_Name: Forest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &351729879853809150
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7389182924737179463}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5065091264539701868}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

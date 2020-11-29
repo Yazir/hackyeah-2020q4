@@ -10,9 +10,12 @@ public class SegmentController : MonoBehaviour
     [SerializeField] private Transform leftWall;
     [SerializeField] private Transform leftWallPivot;
     [SerializeField] private Transform leftWallSocket;
+    [SerializeField] private StreetGen leftGen;
     [SerializeField] private Transform rightWall;
     [SerializeField] private Transform rightWallPivot;
     [SerializeField] private Transform rightWallSocket;
+    [SerializeField] private StreetGen rightGen;
+    [SerializeField] private MeshRenderer floor;
 
     public Transform CoreSocket => coreSocket;
     public Transform LeftWallSocket => leftWallSocket;
@@ -65,9 +68,14 @@ public class SegmentController : MonoBehaviour
         angle = parameters.Angle;
         
         loadedParameters = parameters;
-        // załadować wizualia ścian
-        // parameters.WallSegments 
-        
+
+        if (parameters.Forest)
+        {
+            leftGen.ActivateForest();
+            rightGen.ActivateForest();
+        }
+
+        floor.material = parameters.FloorMaterial;
     }
 
     public Vector3[] GetSpawnpoints(int amount = 1) {

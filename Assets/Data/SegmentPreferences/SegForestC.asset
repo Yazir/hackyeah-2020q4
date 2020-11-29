@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f1675297c50467042a264149b2c5fe15, type: 3}
-  m_Name: SegCityA
+  m_Name: SegForestC
   m_EditorClassIdentifier: 
   angle: -1
   angleRandomness: 5
-  forest: 0
-  floorMaterial: {fileID: 2100000, guid: 6572880abe875d849904d08696f5aeb7, type: 2}
-  obstacleSet: {fileID: 11400000, guid: 3f59514c7896a8b4594e9b06caa86846, type: 2}
+  forest: 1
+  floorMaterial: {fileID: 2100000, guid: fe3a65f8caeddc649990667f1f182138, type: 2}
+  obstacleSet: {fileID: 11400000, guid: cb3b000346528ec4695465d434d2b4ba, type: 2}
