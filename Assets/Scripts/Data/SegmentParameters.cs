@@ -8,6 +8,7 @@ public interface ISegmentParameters
     float AngleDeviation { get; }
     bool Forest { get; }
     Material FloorMaterial { get; }
+    ObstacleSet ObstacleSet { get; }
 }
 
 [CreateAssetMenu(menuName = "HY/Segment Parameters")]

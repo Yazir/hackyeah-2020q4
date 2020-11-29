@@ -305,6 +305,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8766294535734489815}
   - component: {fileID: 4877352481731302328}
+  - component: {fileID: 6471324006276957026}
   m_Layer: 0
   m_Name: Segment
   m_TagString: Untagged
@@ -354,6 +355,30 @@ MonoBehaviour:
   rightWallSocket: {fileID: 8800701375276401334}
   rightGen: {fileID: 3115325271379331270}
   floor: {fileID: 8766294536549590290}
+  forestObstacles:
+  - {fileID: 2077125435817003056, guid: 493aabc6c5f9d674f88818fc86cfbff1, type: 3}
+  - {fileID: 6939531842818879310, guid: 4da17241acae05b48a472f68e234b7ae, type: 3}
+  - {fileID: 1626684623198909598, guid: ef119406ee30f5946975d822def1954a, type: 3}
+  - {fileID: 6293029824849358131, guid: 357351746b0e9dc4c93cbb72b23c0160, type: 3}
+  - {fileID: 450772592588058552, guid: 797db55ef177a2b44887d29da6f79068, type: 3}
+  - {fileID: 3230193669554838200, guid: 45d5d4cd26c445b418e90666f5eab1d5, type: 3}
+--- !u!320 &6471324006276957026
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8766294535734489816}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: 53654b1ceb0cf454c865c040a7c5f3f8, type: 2}
+  m_InitialState: 1
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings: []
+  m_ExposedReferences:
+    m_References: []
 --- !u!1 &8766294535978154734
 GameObject:
   m_ObjectHideFlags: 0
@@ -1738,11 +1763,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b3e7a8a41c209af4cb4f467e86281184, type: 3}
---- !u!4 &3115325271379331269 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5065091264539701868, guid: b3e7a8a41c209af4cb4f467e86281184, type: 3}
-  m_PrefabInstance: {fileID: 7886095964850518697}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &3115325271379331270 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5065091264539701871, guid: b3e7a8a41c209af4cb4f467e86281184, type: 3}
@@ -1754,3 +1774,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26530c6671d50bb47b06ef90bbd49d28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &3115325271379331269 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5065091264539701868, guid: b3e7a8a41c209af4cb4f467e86281184, type: 3}
+  m_PrefabInstance: {fileID: 7886095964850518697}
+  m_PrefabAsset: {fileID: 0}

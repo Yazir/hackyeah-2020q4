@@ -16,6 +16,7 @@ public class SegmentController : MonoBehaviour
     [SerializeField] private Transform rightWallSocket;
     [SerializeField] private StreetGen rightGen;
     [SerializeField] private MeshRenderer floor;
+    [SerializeField] private GameObject[] forestObstacles;
 
     public Transform CoreSocket => coreSocket;
     public Transform LeftWallSocket => leftWallSocket;
@@ -26,6 +27,12 @@ public class SegmentController : MonoBehaviour
 
     private ISegmentParameters loadedParameters;
     private float angle = 1;
+    private List<GameObject> obstacles;
+
+    private void Awake()
+    {
+        obstacles = new List<GameObject>();
+    }
 
     public void AlignToSegment(SegmentController otherSegment) {
         var deviationDecay = globalAppliedAngleDeviation*0.65f;
@@ -58,6 +65,10 @@ public class SegmentController : MonoBehaviour
         var rightWallLocalPosition = rightWall.transform.localPosition;
         rightWallLocalPosition.x = Mathf.Lerp(rightWallLocalPosition.x, 0, 0.25f);
         rightWall.transform.localPosition = rightWallLocalPosition;
+
+        CleanupObstacles();
+        if (loadedParameters.Forest)
+            GenerateObstacles();
     }
 
     public void LoadParameters(ISegmentParameters parameters)
@@ -92,5 +103,40 @@ public class SegmentController : MonoBehaviour
         }
 
         return picked.ToArray();
+    }
+
+    private void CleanupObstacles()
+    {
+        obstacles.ForEach(o => Destroy(o));
+        obstacles.Clear();
+    }
+
+    private void GenerateObstacles()
+    {
+        var dir = (leftWallSocket.position - leftWallPivot.position).normalized;
+        var dist = Vector3.Distance(leftWallSocket.position, leftWallPivot.position);
+        var maxI = Random.Range(20, 40);
+        for (var i = 0; i < maxI; i++) {
+            var position = leftWallSocket.position + dir * dist * Random.value;
+            position += Vector3.right * (5 + Random.value *20);
+            position += Vector3.down * Random.value*0.05f;
+            var obstacle = Instantiate(forestObstacles[Random.Range(0, forestObstacles.Length-1)]);
+            obstacle.transform.position = position;
+            obstacle.transform.localScale = Vector3.one * Random.Range(0.6f,1f);
+            obstacles.Add(obstacle);
+        }
+
+        dir = (rightWallSocket.position - rightWallPivot.position).normalized;
+        dist = Vector3.Distance(rightWallSocket.position, rightWallPivot.position);
+        maxI = Random.Range(20, 40);
+        for (var i = 0; i < maxI; i++) {
+            var position = rightWallSocket.position + dir * dist * Random.value;
+            position += Vector3.left * (5 + Random.value *20);
+            position += Vector3.down * Random.value*0.05f;
+            var obstacle = Instantiate(forestObstacles[Random.Range(0, forestObstacles.Length-1)]);
+            obstacle.transform.position = position;
+            obstacle.transform.localScale = Vector3.one * Random.Range(0.6f,1f);
+            obstacles.Add(obstacle);
+        }
     }
 }
