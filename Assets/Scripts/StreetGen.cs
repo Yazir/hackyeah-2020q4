@@ -44,9 +44,9 @@ public class StreetGen : MonoBehaviour
                 bob.transform.parent = empty.transform;
                 bob.transform.localPosition = new Vector3(0, 0, next);
                 if (!reverse)
-                    next += 25;
+                    next += 4;
                 else
-                    next -= 25;
+                    next -= 4;
             }
         }
     }
