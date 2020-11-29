@@ -91,6 +91,11 @@ public class PlayerController : MonoBehaviour
     {
         var ped = pedCollider.attachedRigidbody.GetComponent<PedestrianController>();
         var ghost = SpawnAndCollectGhost(ped.VisualObject);
+
+        var camera = GameContext.instance.CameraController;
+        camera.SetFocusTarget(ghost.transform, 0.8f);
+        camera.runtimeOffset = (camera.Offset.normalized + Vector3.back) * collectedGhosts.Count / 6f;
+        
         ghost.transform.position = ped.transform.position;
     }
 
@@ -98,13 +103,16 @@ public class PlayerController : MonoBehaviour
         var ghost = Instantiate(ghostPrefab).GetComponent<GhostController>();
         ghost.transform.position = at.position;
         ghost.transform.rotation = at.rotation;
-        collectedGhosts.Add(ghost);
+
+        if (collectedGhosts.Count % 2 == 0) collectedGhosts.Add(ghost);
+        else collectedGhosts.Insert(0, ghost);
+
         ghost.AnimateCollection(this);
         return ghost;
     }
 
     private void UpdateGhosts() {
-        var spacing = 0.20f;
+        var spacing = 0.13f;
 
         var animable = collectedGhosts.Where(g => g.FinishedAnimating).ToArray();
         var maxIndex = animable.Length;
@@ -114,7 +122,7 @@ public class PlayerController : MonoBehaviour
             if (!ghost.FinishedAnimating)
                 continue;
 
-            var origin = transform.position + Vector3.forward*0.55f + rb.velocity * Time.fixedDeltaTime;
+            var origin = transform.position + Vector3.back*0.35f + rb.velocity * Time.fixedDeltaTime;
             var outPosition = origin + Vector3.right * i*spacing;
             outPosition += Vector3.left * maxIndex / 2f * spacing;
             outPosition += Vector3.down * 0.15f;
@@ -129,8 +137,8 @@ public class PlayerController : MonoBehaviour
             var outRotation = Quaternion.LookRotation(ghostToPlayer);
 
             var controlFactor = ghost.OutsideControlFactor;
-            ghost.transform.position = Vector3.Lerp(ghost.transform.position, outPosition, 0.6f - sideFactor*0.35f * controlFactor);
-            ghost.transform.rotation = Quaternion.Lerp(ghost.transform.rotation, outRotation, 0.05f * controlFactor);
+            ghost.transform.position = Vector3.Lerp(ghost.transform.position, outPosition, (0.6f - sideFactor*0.35f) * controlFactor);
+            ghost.transform.rotation = Quaternion.Lerp(ghost.transform.rotation, outRotation, 0.1f * controlFactor);
         }
     }
 }
