@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public interface ICullable {
     float PositionZ { get; }
@@ -15,7 +16,7 @@ public class MapManager : MonoBehaviour
     [SerializeField] private Transform segmentParent;
     [SerializeField] private Transform pedParent;
 
-    private const int SEGMENT_AMOUNT = 15;
+    private const int SEGMENT_AMOUNT = 20;
     private const float SEGMENT_LENGTH = 10;
 
     public int PedSpawnAmount { get; set; } = 3;
@@ -24,17 +25,21 @@ public class MapManager : MonoBehaviour
     private List<SegmentController> segments;
     private List<PedestrianController> peds;
     private List<ICullable> cullables;
+
     private IGameContext ctx => GameContext.instance;
     private float lastSegmentZ = -SEGMENT_LENGTH;
     private float distancePedCounter;
     private SegmentParameters loadedSegmentParameters;
+
+    private Volume currentlyActivePostProcessVolume;
+    private IEnumerator postProcessVolumeTransitionCO;
 
     private void Awake()
     {
         cullables = new List<ICullable>();
         segments = new List<SegmentController>();
         peds = new List<PedestrianController>();
-
+        
         for (int i = 0; i < SEGMENT_AMOUNT; i++)
         {
             AppendNewSegment();

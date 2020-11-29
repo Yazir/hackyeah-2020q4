@@ -16,3 +16,4 @@ MonoBehaviour:
   pedSpawnAmount: 2
   pedSpawnPerDist: 17
   segmentParameters: {fileID: 11400000, guid: f606a136ff2cdac4e8618ab2ee8ea258, type: 2}
+  postProcessProfile: {fileID: 11400000, guid: 7110ff0ea64231d4b9bdf7c6a9676acf, type: 2}

@@ -55,7 +55,6 @@ public class GhostController : MonoBehaviour
 
     private IEnumerator TweenOutsideControlFactor(float target, float duration)
     {
-
         var step = (target - outsideControlFactor) / duration;
         while (duration > 0)
         {
