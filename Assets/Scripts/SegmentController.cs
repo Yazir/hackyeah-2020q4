@@ -115,7 +115,7 @@ public class SegmentController : MonoBehaviour
     {
         var dir = (leftWallSocket.position - leftWallPivot.position).normalized;
         var dist = Vector3.Distance(leftWallSocket.position, leftWallPivot.position);
-        var maxI = Random.Range(20, 40);
+        var maxI = Random.Range(5, 10);
         for (var i = 0; i < maxI; i++) {
             var position = leftWallSocket.position + dir * dist * Random.value;
             position += Vector3.right * (5 + Random.value *20);
@@ -128,7 +128,7 @@ public class SegmentController : MonoBehaviour
 
         dir = (rightWallSocket.position - rightWallPivot.position).normalized;
         dist = Vector3.Distance(rightWallSocket.position, rightWallPivot.position);
-        maxI = Random.Range(20, 40);
+        maxI = Random.Range(5, 10);
         for (var i = 0; i < maxI; i++) {
             var position = rightWallSocket.position + dir * dist * Random.value;
             position += Vector3.left * (5 + Random.value *20);

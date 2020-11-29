@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: ForestD
   m_EditorClassIdentifier: 
   minimumZ: 700
-  pedSpawnAmount: 0
-  pedSpawnPerDist: 0
+  pedSpawnAmount: 5
+  pedSpawnPerDist: 15
   segmentParameters: {fileID: 11400000, guid: 0bb2622168036c349b9c98349211f72b, type: 2}

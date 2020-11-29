@@ -61,8 +61,14 @@ public class PlayerController : MonoBehaviour
             else velocity.x -= Mathf.Sign(velocity.x) * factor;
         }
 
+        if (finishTarget != null) {
+            velocity = (finishTarget.transform.position - transform.position).normalized * 0.5f;
+        }
+        else {
+            rb.velocity = Vector3.zero;
+        } 
+        
         rb.MovePosition(rb.position + velocity * dt);
-        rb.velocity = Vector3.zero;
         
         // zDistanceTravelledLastTick = velocity.magnitude * dt;
         zDistanceTravelledLastTick = Mathf.Max(0, transform.position.z - lastPosition.z);
@@ -140,5 +146,24 @@ public class PlayerController : MonoBehaviour
             ghost.transform.position = Vector3.Lerp(ghost.transform.position, outPosition, (0.6f - sideFactor*0.35f) * controlFactor);
             ghost.transform.rotation = Quaternion.Lerp(ghost.transform.rotation, outRotation, 0.1f * controlFactor);
         }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.GetComponent<Collider>().tag == "Finito") {
+            if (startedFinishSequence == false) {
+                startedFinishSequence = true;
+                finishTarget = other.transform;
+                GameContext.instance.FadeOut();
+                StartCoroutine(FinishSequenceCO());
+            }
+        }
+    }
+
+    private Transform finishTarget;
+    private bool startedFinishSequence = false;
+    private IEnumerator FinishSequenceCO() {
+        yield return new WaitForSeconds(25);
+        Application.Quit();
     }
 }
