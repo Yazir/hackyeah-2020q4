@@ -28,6 +28,8 @@ public class Narrator : MonoBehaviour
         playerController = GameContext.instance.PlayerController;
 
         queries = Resources.LoadAll<Query>("Data/NarrationAutoload").OrderBy(q => q.MinimumZ).ToArray();
+        
+        HandleQuery();
     }
 
     private void FixedUpdate()
