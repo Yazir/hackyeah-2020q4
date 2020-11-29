@@ -18,11 +18,13 @@ public class AnimationSpeedAdjuster : MonoBehaviour
 
     private void FixedUpdate()
     {
+
         if (modifier == 0) modifier = 1;
 
         var currentPosition = transform.position;
         speed = Vector3.Distance(lastPosition, currentPosition) / Time.fixedDeltaTime;
 
+        animator.SetFloat("speed",speed);
         animator.speed = baseSpeed + speed / modifier;
         lastPosition = currentPosition;
     }
