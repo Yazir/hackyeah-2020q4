@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1675297c50467042a264149b2c5fe15, type: 3}
+  m_Name: SegForestG
+  m_EditorClassIdentifier: 
+  angle: 0
+  angleRandomness: 10
+  forest: 1
+  floorMaterial: {fileID: 2100000, guid: fe3a65f8caeddc649990667f1f182138, type: 2}
+  obstacleSet: {fileID: 11400000, guid: cb3b000346528ec4695465d434d2b4ba, type: 2}
